@@ -18,6 +18,12 @@
 <resources>
 
     <style name="Theme.Bacon" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/blue_700</item>
+        <item name="colorPrimaryDark">@color/indigo</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="colorAccent">@color/theme_accent</item>
+        <item name="android:textColorSecondary">@color/grey</item>
+        <item name="android:fontFamily">sans-serif-smallcaps</item>
 
         <item name="android:windowContentTransitions">true</item>
 
