@@ -21,6 +21,7 @@
             android:id="@+id/thumbnail"
             android:layout_width="match_parent"
             android:layout_height="150dp"
+            android:scaleType="centerCrop"
             android:transitionName="@string/detail_image"
             android:background="@color/photo_placeholder" />
 
@@ -39,7 +40,7 @@
                 android:paddingRight="16dp"
                 android:paddingBottom="4dp"
                 android:textColor="@color/ltgray"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:ellipsize="end"
                 android:maxLines="2"
                 tools:text="@string/activity_detail_title"/>
@@ -53,7 +54,7 @@
                 android:paddingRight="16dp"
                 android:paddingBottom="16dp"
                 android:textColor="@color/ltgray"
-                android:textSize="12dp"
+                android:textSize="12sp"
                 android:maxLines="2"
                 android:ellipsize="end"
                 tools:text="@string/fragment_detail"/>

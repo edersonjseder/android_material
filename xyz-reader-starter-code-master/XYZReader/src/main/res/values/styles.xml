@@ -18,8 +18,8 @@
 <resources>
 
     <style name="Theme.Bacon" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/blue_700</item>
-        <item name="colorPrimaryDark">@color/indigo</item>
+        <item name="colorPrimary">@color/grey_700</item>
+        <item name="colorPrimaryDark">@color/dark</item>
         <item name="android:textColorPrimary">#FFFFFF</item>
         <item name="colorAccent">@color/theme_accent</item>
         <item name="android:textColorSecondary">@color/grey</item>

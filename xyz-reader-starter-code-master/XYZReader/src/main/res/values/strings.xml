@@ -16,6 +16,8 @@
         I\'ve had about ebooks from my release of two novels and most of a short collection online
         under a Creative Commons license.</string>
 
+    <string name="detail_body_empty_text">N/A</string>
+
     <string name="up">Up</string>
 
 </resources>

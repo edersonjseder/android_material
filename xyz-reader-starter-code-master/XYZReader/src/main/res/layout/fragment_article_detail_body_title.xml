@@ -15,7 +15,7 @@
 
     <TextView
         android:id="@+id/article_title"
-        style="?android:attr/textAppearanceLarge"
+        style="@style/Base.TextAppearance.AppCompat.Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/detail_metabar_title_bottom_padding"
@@ -28,7 +28,7 @@
 
     <TextView
         android:id="@+id/article_byline"
-        style="?android:attr/textAppearanceSmall"
+        style="@style/Base.TextAppearance.AppCompat.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#8fff"

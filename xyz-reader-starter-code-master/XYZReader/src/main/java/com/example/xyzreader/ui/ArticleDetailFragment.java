@@ -2,6 +2,7 @@ package com.example.xyzreader.ui;
 
 import android.app.Fragment;
 import android.app.LoaderManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -17,8 +18,11 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
@@ -66,6 +70,12 @@ public class ArticleDetailFragment extends Fragment implements
     private SimpleDateFormat outputFormat = new SimpleDateFormat();
     // Most time functions can only handle 1902 - 2037
     private GregorianCalendar START_OF_EPOCH = new GregorianCalendar(2,1,1);
+
+    private FloatingActionButton fab;
+
+    private RecyclerView mRecyclerViewTextList;
+
+    private String[] mBodyTextDetail;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -140,7 +150,13 @@ public class ArticleDetailFragment extends Fragment implements
 
         mStatusBarColorDrawable = new ColorDrawable(0);
 
-        mRootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
+        mRecyclerViewTextList = (RecyclerView) mRootView.findViewById(R.id.recycler_view_body_text);
+        mRecyclerViewTextList.setHasFixedSize(true);
+        mRecyclerViewTextList.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        fab = (FloatingActionButton) mRootView.findViewById(R.id.share_fab);
+
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
@@ -203,10 +219,7 @@ public class ArticleDetailFragment extends Fragment implements
         TextView titleView = (TextView) mRootView.findViewById(R.id.article_title);
         TextView bylineView = (TextView) mRootView.findViewById(R.id.article_byline);
         bylineView.setMovementMethod(new LinkMovementMethod());
-        TextView bodyView = (TextView) mRootView.findViewById(R.id.article_body);
-
-
-        bodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "Rosario-Regular.ttf"));
+        TextView bodyView = (TextView) mRootView.findViewById(R.id.article_body_empty_text);
 
         if (mCursor != null) {
             mRootView.setAlpha(0);
@@ -232,7 +245,13 @@ public class ArticleDetailFragment extends Fragment implements
                                 + "</font>"));
 
             }
-            bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
+
+            mBodyTextDetail = mCursor.getString(ArticleLoader.Query.BODY).split("(\r\n\n)");
+
+            Adapter adapter = new Adapter(mBodyTextDetail);
+
+            mRecyclerViewTextList.setAdapter(adapter);
+
             ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
                     .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
                         @Override
@@ -257,7 +276,7 @@ public class ArticleDetailFragment extends Fragment implements
             mRootView.setVisibility(View.GONE);
             titleView.setText("N/A");
             bylineView.setText("N/A" );
-            bodyView.setText("N/A");
+            bodyView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -300,5 +319,52 @@ public class ArticleDetailFragment extends Fragment implements
         return mIsCard
                 ? (int) mPhotoContainerView.getTranslationY() + mPhotoView.getHeight() - mScrollY
                 : mPhotoView.getHeight() - mScrollY;
+    }
+
+
+    private class Adapter extends RecyclerView.Adapter<ArticleDetailFragment.ViewHolder> {
+        private String[] bodyTextLoaded;
+
+        public Adapter(String[] bodyText) {
+            bodyTextLoaded = bodyText;
+        }
+
+        @Override
+        public ArticleDetailFragment.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            Context context = parent.getContext();
+            int layoutBodyTextList = R.layout.fragment_text_list;
+            LayoutInflater inflater = LayoutInflater.from(context);
+            boolean shouldAttachToParentImmediately = false;
+
+            View view = inflater.inflate(layoutBodyTextList, parent, shouldAttachToParentImmediately);
+
+            return new ArticleDetailFragment.ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(ArticleDetailFragment.ViewHolder holder, int position) {
+
+            String paragraph = bodyTextLoaded[position];
+
+            holder.titleView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "Rosario-Regular.ttf"));
+            holder.titleView.setText(paragraph);
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return bodyTextLoaded.length;
+        }
+    }
+
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        public TextView titleView;
+
+        public ViewHolder(View view) {
+            super(view);
+            titleView = (TextView) view.findViewById(R.id.article_body);
+        }
     }
 }
